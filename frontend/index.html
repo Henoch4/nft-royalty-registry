@@ -91,6 +91,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script>
+const PROJECT_ID = 'ee6081d44f535b82b71aa2003badb2b7'; // AppKit project ID — wired for BOT Chain 677
+
 
 const ABI=['function registerRoyalty(address nft,uint256 tokenId,address recipient,uint96 bps)','function payRoyalty(address nft,uint256 tokenId) payable','function getRoyalty(address nft,uint256 tokenId) view returns (address recipient,uint96 bps,uint256 totalPaid)'];
 const store=new Map([['0x7a3f000000000000000000000000000000000001#1',{recipient:'0x9b2e000000000000000000000000000000000002',bps:500,paid:3.2}],['0x7a3f000000000000000000000000000000000001#7',{recipient:'0x11aa000000000000000000000000000000000003',bps:750,paid:0.9}]]);
