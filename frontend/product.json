@@ -1,9 +1,9 @@
 {
-  "abiSource": "pending-current-source",
+  "abiSource": "runtime-matched-current-source",
   "repo": "royalty-registry",
   "brand": "Royalty Registry",
   "summary": "Register royalty terms and record payments made through this registry. External marketplaces are not forced to pay royalties.",
-  "address": null,
+  "address": "0xbC76285c99fc5dBC54d24616B086DA5D24F9d14E",
   "owner": null,
   "abi": [
     {
