@@ -19,6 +19,7 @@ abstract contract Ownable {
     function owner() public view returns (address) { return _owner; }
 }
 
+interface IRegisteredNFT { function ownerOf(uint256 tokenId) external view returns(address); }
 contract NFTRoyaltyRegistry is ReentrancyGuard, Ownable {
     struct Royalty {
         address nftContract;
@@ -31,6 +32,7 @@ contract NFTRoyaltyRegistry is ReentrancyGuard, Ownable {
     Royalty[] public royalties;
     mapping(uint256 => mapping(address => bool)) public royaltyRecord;
     uint256 public royaltyCount;
+    mapping(bytes32=>bool) public nftRegistered;
 
     event RoyaltyRegistered(uint256 indexed rid, address indexed nftContract, uint256 tokenId, address indexed creator, uint256 bps);
     event RoyaltyPaid(uint256 indexed rid, address indexed from, address indexed to, uint256 amount);
@@ -41,6 +43,9 @@ contract NFTRoyaltyRegistry is ReentrancyGuard, Ownable {
     function registerRoyalty(address nftContract, uint256 tokenId, uint256 royaltyBps)
         external nonReentrant returns (uint256) {
         require(nftContract != address(0), "Zero nft contract");
+        require(nftContract.code.length>0&&IRegisteredNFT(nftContract).ownerOf(tokenId)==msg.sender,"Not NFT owner");
+        bytes32 key=keccak256(abi.encode(nftContract,tokenId));
+        require(!nftRegistered[key],"Royalty already registered");nftRegistered[key]=true;
         require(royaltyBps <= 1000, "Max 10%");
         Royalty storage r = royalties.push();
         r.nftContract = nftContract;
@@ -63,6 +68,7 @@ contract NFTRoyaltyRegistry is ReentrancyGuard, Ownable {
         Royalty storage r = royalties[rid];
         require(royaltyRecord[rid][r.creator], "Not registered");
         require(msg.value > 0, "Zero royalty");
+        require(from==msg.sender&&to==r.creator,"Incorrect payment parties");
         r.totalEarned += msg.value;
         emit RoyaltyPaid(rid, from, to, msg.value);
     }
